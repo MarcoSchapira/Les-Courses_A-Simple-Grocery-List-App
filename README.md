@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # 🛒 Les Course – Grocery List App
 
 **Les Course** is a Flutter app to manage grocery lists with smart item suggestions, categories, priority sorting, and dark/light themes. It automatically saves your items and customizations.
@@ -63,3 +64,21 @@ git clone https://github.com/yourusername/les-course.git
 cd les-course
 flutter pub get
 flutter run
+=======
+# les_course_de_papoum_et_mamoune
+
+A new Flutter project.
+
+## Getting Started
+
+This project is a starting point for a Flutter application.
+
+A few resources to get you started if this is your first Flutter project:
+
+- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
+- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+
+For help getting started with Flutter development, view the
+[online documentation](https://docs.flutter.dev/), which offers tutorials,
+samples, guidance on mobile development, and a full API reference.
+>>>>>>> 9914320 (Full App)
