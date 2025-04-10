@@ -1016,6 +1016,298 @@ class GroceryProvider with ChangeNotifier {
     return internalCategory;
   }
 
+  /// Updates all existing *default* FoodItems from the old language to the new language.
+  /// Matches items by exact name from the old language default list, then renames them
+  /// to the corresponding name in the new language default list.
+  void updateDefaultFoodItemsForLanguage(
+      AppLanguage oldLang, AppLanguage newLang) {
+    if (oldLang == newLang) return; // No change needed
+
+    // 1) Get the old default items map
+    final oldMap = (oldLang == AppLanguage.french)
+        ? {
+            'Fruits': [
+              'Pommes',
+              'Bananes',
+              'Oranges',
+              'Fraises',
+              'Myrtilles',
+              'Citrons',
+              'Avocats',
+              'Pêches'
+            ],
+            'Vegetables': [
+              'Carottes',
+              'Brocoli',
+              'Épinards',
+              'Tomates',
+              'Oignons',
+              'Pommes de terre',
+              'Poivrons',
+              'Concombre'
+            ],
+            'Dairy': [
+              'Lait',
+              'Œufs',
+              'Fromage',
+              'Yaourt',
+              'Beurre',
+              'Fromage à la crème',
+              'Lait d\'amande'
+            ],
+            'Meat': [
+              'Cuisses de poulet',
+              'Bœuf haché',
+              'Bacon',
+              'Steak',
+              'Côtelettes de porc',
+              'Jambon'
+            ],
+            'Bakery': [
+              'Pain',
+              'Bagels',
+              'Tortillas',
+              'Croissants',
+              'Muffins',
+              'Biscuits'
+            ],
+            'Pantry': [
+              'Riz',
+              'Pâtes',
+              'Farine',
+              'Sucre',
+              'Céréales',
+              'Beurre d\'arachide',
+              'Confiture',
+              'Huile d\'olive',
+              'Ketchup',
+              'Moutarde',
+              'Sauce soja'
+            ],
+            'Frozen': [
+              'Crème glacée',
+              'Pizza surgelée',
+              'Légumes surgelés',
+              'Nuggets de poulet',
+              'Poisson surgelé'
+            ],
+            'Beverages': [
+              'Eau',
+              'Café',
+              'Thé',
+              'Jus',
+              'Soda',
+              'Eau pétillante'
+            ],
+            'Snacks': [
+              'Chips',
+              'Bretzels',
+              'Popcorn',
+              'Noix',
+              'Barres granola',
+              'Chocolat'
+            ],
+            'Household': [
+              'Essuie-tout',
+              'Papier toilette',
+              'Liquide vaisselle',
+              'Lessive',
+              'Sacs poubelle',
+              'Produits de nettoyage'
+            ],
+            'Spices': [
+              'Sel',
+              'Poivre',
+              'Poudre d\'ail',
+              'Cannelle',
+              'Paprika',
+              'Origan'
+            ],
+            'Seafood': ['Saumon', 'Thon', 'Crevettes', 'Crabe'],
+            'Health': [
+              'Vitamines',
+              'Pastilles pour la toux',
+              'Pansements',
+              'Analgésiques',
+              'Médicaments contre le rhume'
+            ],
+            'Personal': [
+              'Shampooing',
+              'Savon',
+              'Déodorant',
+              'Dentifrice',
+              'Rince-bouche',
+              'Crème solaire'
+            ],
+            'Other': [
+              'Bloc-notes',
+              'Stylos',
+              'Chargeur de téléphone',
+              'Parapluie',
+              'Ciseaux'
+            ],
+          }
+        : {
+            // English version
+            'Fruits': [
+              'Apples',
+              'Bananas',
+              'Oranges',
+              'Strawberries',
+              'Blueberries',
+              'Lemons',
+              'Avocados',
+              'Peaches'
+            ],
+            'Vegetables': [
+              'Carrots',
+              'Broccoli',
+              'Spinach',
+              'Tomatoes',
+              'Onions',
+              'Potatoes',
+              'Bell Peppers',
+              'Cucumber'
+            ],
+            'Dairy': [
+              'Milk',
+              'Eggs',
+              'Cheese',
+              'Yogurt',
+              'Butter',
+              'Cream Cheese',
+              'Almond Milk'
+            ],
+            'Meat': [
+              'Chicken Breast',
+              'Ground Beef',
+              'Bacon',
+              'Steak',
+              'Pork Chops',
+              'Ham'
+            ],
+            'Bakery': [
+              'Bread',
+              'Bagels',
+              'Tortillas',
+              'Croissants',
+              'Muffins',
+              'Cookies'
+            ],
+            'Pantry': [
+              'Rice',
+              'Pasta',
+              'Flour',
+              'Sugar',
+              'Cereal',
+              'Peanut Butter',
+              'Jam',
+              'Olive Oil',
+              'Ketchup',
+              'Mustard',
+              'Soy Sauce'
+            ],
+            'Frozen': [
+              'Ice Cream',
+              'Frozen Pizza',
+              'Frozen Vegetables',
+              'Frozen Chicken Nuggets',
+              'Frozen Fish'
+            ],
+            'Beverages': [
+              'Water',
+              'Coffee',
+              'Tea',
+              'Juice',
+              'Soda',
+              'Sparkling Water'
+            ],
+            'Snacks': [
+              'Chips',
+              'Pretzels',
+              'Popcorn',
+              'Nuts',
+              'Granola Bars',
+              'Chocolate'
+            ],
+            'Household': [
+              'Paper Towels',
+              'Toilet Paper',
+              'Dish Soap',
+              'Laundry Detergent',
+              'Trash Bags',
+              'Cleaning Supplies'
+            ],
+            'Spices': [
+              'Salt',
+              'Pepper',
+              'Garlic Powder',
+              'Cinnamon',
+              'Paprika',
+              'Oregano'
+            ],
+            'Seafood': ['Salmon', 'Tuna', 'Shrimp', 'Crab'],
+            'Health': [
+              'Vitamins',
+              'Cough Drops',
+              'Band-Aids',
+              'Pain Relievers',
+              'Cold Medicine'
+            ],
+            'Personal': [
+              'Shampoo',
+              'Soap',
+              'Deodorant',
+              'Toothpaste',
+              'Mouthwash',
+              'Sunscreen'
+            ],
+            'Other': [
+              'Notepad',
+              'Pens',
+              'Phone Charger',
+              'Umbrella',
+              'Scissors'
+            ],
+          };
+
+    // 2) Get the new language’s default items map
+    final newMap = (newLang == AppLanguage.french)
+        ? defaultFoodItems // we already have "defaultFoodItems" for French
+        : defaultFoodItems; // for English
+
+    // For each "old name" in oldMap, rename it to the "new name" in newMap
+    oldMap.forEach((categoryKey, oldNames) {
+      final newNames = newMap[categoryKey] ?? [];
+
+      // We assume oldNames and newNames match up in index (the same items)
+      for (int i = 0; i < oldNames.length; i++) {
+        final oldName = oldNames[i];
+        if (i < newNames.length) {
+          final newName = newNames[i];
+
+          // Find existing FoodItem by oldName (case-insensitive)
+          final match = _foodBox.values.firstWhere(
+            (foodItem) => foodItem.name.toLowerCase() == oldName.toLowerCase(),
+            orElse: () => FoodItem(
+              id: '',
+              name: '',
+              category: '',
+            ),
+          );
+
+          // If found, rename it
+          if (match.id.isNotEmpty) {
+            match.name = newName;
+            match.save();
+          }
+        }
+      }
+    });
+
+    notifyListeners();
+  }
+
   // Category icons mapping - use base category names only
   final Map<String, IconData> _baseIcons = {
     'Fruits': Icons.apple,
@@ -1342,425 +1634,6 @@ class GroceryProvider with ChangeNotifier {
       };
     }
   }
-  // Default food items based on language
-  // Map<String, List<String>> get defaultFoodItems {
-  //   if (languageProvider.currentLanguage == AppLanguage.french) {
-  //     return {
-  //       'Fruits': [
-  //         'Pommes',
-  //         'Bananes',
-  //         'Oranges',
-  //         'Raisins',
-  //         'Fraises',
-  //         'Myrtilles',
-  //         'Citrons',
-  //         'Limes',
-  //         'Avocats',
-  //         'Pêches',
-  //         'Poires',
-  //         'Pastèque',
-  //         'Ananas',
-  //         'Mangue',
-  //         'Kiwi'
-  //       ],
-  //       'Vegetables': [
-  //         'Carottes',
-  //         'Brocoli',
-  //         'Épinards',
-  //         'Laitue',
-  //         'Tomates',
-  //         'Oignons',
-  //         'Pommes de terre',
-  //         'Poivrons',
-  //         'Concombre',
-  //         'Courgette',
-  //         'Champignons',
-  //         'Ail',
-  //         'Maïs',
-  //         'Patates douces',
-  //         'Chou'
-  //       ],
-  //       'Dairy': [
-  //         'Lait',
-  //         'Œufs',
-  //         'Fromage',
-  //         'Yaourt',
-  //         'Beurre',
-  //         'Fromage à la crème',
-  //         'Crème sure',
-  //         'Crème fraîche',
-  //         'Fromage cottage',
-  //         'Lait d\'amande'
-  //       ],
-  //       'Meat': [
-  //         'Poitrine de poulet',
-  //         'Bœuf haché',
-  //         'Bacon',
-  //         'Saucisse',
-  //         'Steak',
-  //         'Côtelettes de porc',
-  //         'Jambon',
-  //         'Dinde',
-  //         'Cuisses de poulet',
-  //         'Dinde hachée'
-  //       ],
-  //       'Bakery': [
-  //         'Pain',
-  //         'Bagels',
-  //         'Tortillas',
-  //         'Pain pita',
-  //         'Pains à hamburger',
-  //         'Croissants',
-  //         'Muffins',
-  //         'Beignets',
-  //         'Gâteau',
-  //         'Biscuits'
-  //       ],
-  //       'Pantry': [
-  //         'Riz',
-  //         'Pâtes',
-  //         'Farine',
-  //         'Sucre',
-  //         'Céréales',
-  //         'Beurre d\'arachide',
-  //         'Confiture',
-  //         'Miel',
-  //         'Huile d\'olive',
-  //         'Vinaigre',
-  //         'Ketchup',
-  //         'Moutarde',
-  //         'Mayonnaise',
-  //         'Sauce soja',
-  //         'Sauce piquante',
-  //         'Sauce BBQ',
-  //         'Vinaigrette',
-  //         'Cornichons',
-  //         'Salsa',
-  //         'Tomates en conserve',
-  //         'Haricots',
-  //         'Soupe',
-  //         'Thon',
-  //         'Bouillon de poulet'
-  //       ],
-  //       'Frozen': [
-  //         'Crème glacée',
-  //         'Pizza surgelée',
-  //         'Légumes surgelés',
-  //         'Fruits surgelés',
-  //         'Plats préparés',
-  //         'Glace',
-  //         'Gaufres surgelées',
-  //         'Nuggets de poulet',
-  //         'Poisson surgelé',
-  //         'Bâtonnets glacés'
-  //       ],
-  //       'Beverages': [
-  //         'Eau',
-  //         'Café',
-  //         'Thé',
-  //         'Jus',
-  //         'Soda',
-  //         'Bière',
-  //         'Vin',
-  //         'Eau pétillante',
-  //         'Boissons énergisantes',
-  //         'Limonade'
-  //       ],
-  //       'Snacks': [
-  //         'Chips',
-  //         'Bretzels',
-  //         'Popcorn',
-  //         'Noix',
-  //         'Mélange montagnard',
-  //         'Barres granola',
-  //         'Crackers',
-  //         'Chocolat',
-  //         'Bonbons',
-  //         'Biscuits'
-  //       ],
-  //       'Household': [
-  //         'Essuie-tout',
-  //         'Papier toilette',
-  //         'Liquide vaisselle',
-  //         'Lessive',
-  //         'Sacs poubelle',
-  //         'Produits de nettoyage',
-  //         'Mouchoirs',
-  //         'Piles',
-  //         'Ampoules',
-  //         'Désodorisant'
-  //       ],
-  //       'Spices': [
-  //         'Sel',
-  //         'Poivre',
-  //         'Poudre d\'ail',
-  //         'Cannelle',
-  //         'Paprika',
-  //         'Origan',
-  //         'Basilic',
-  //         'Cumin',
-  //         'Thym',
-  //         'Romarin'
-  //       ],
-  //       'Seafood': [
-  //         'Saumon',
-  //         'Thon',
-  //         'Crevettes',
-  //         'Crabe',
-  //         'Tilapia',
-  //         'Morue',
-  //         'Homard',
-  //         'Moules',
-  //         'Coquilles Saint-Jacques',
-  //         'Calamar'
-  //       ],
-  //       'Health': [
-  //         'Vitamines',
-  //         'Suppléments',
-  //         'Protéine en poudre',
-  //         'Pastilles pour la toux',
-  //         'Pansements',
-  //         'Analgésiques',
-  //         'Trousse de premiers soins',
-  //         'Médicaments contre le rhume',
-  //         'Antiacides',
-  //         'Antihistaminiques'
-  //       ],
-  //       'Personal': [
-  //         'Shampooing',
-  //         'Après-shampooing',
-  //         'Savon',
-  //         'Déodorant',
-  //         'Dentifrice',
-  //         'Rince-bouche',
-  //         'Fil dentaire',
-  //         'Rasoirs',
-  //         'Lotion',
-  //         'Crème solaire'
-  //       ],
-  //       'Other': [
-  //         'Bloc-notes',
-  //         'Stylos',
-  //         'Carte-cadeau',
-  //         'Magazine',
-  //         'Journal',
-  //         'Carte de vœux',
-  //         'Timbres',
-  //         'Chargeur de téléphone',
-  //         'Parapluie',
-  //         'Ciseaux'
-  //       ],
-  //     };
-  //   } else {
-  //     // English default items
-  //     return {
-  //       'Fruits': [
-  //         'Apples',
-  //         'Bananas',
-  //         'Oranges',
-  //         'Grapes',
-  //         'Strawberries',
-  //         'Blueberries',
-  //         'Lemons',
-  //         'Limes',
-  //         'Avocados',
-  //         'Peaches',
-  //         'Pears',
-  //         'Watermelon',
-  //         'Pineapple',
-  //         'Mango',
-  //         'Kiwi'
-  //       ],
-  //       'Vegetables': [
-  //         'Carrots',
-  //         'Broccoli',
-  //         'Spinach',
-  //         'Lettuce',
-  //         'Tomatoes',
-  //         'Onions',
-  //         'Potatoes',
-  //         'Bell Peppers',
-  //         'Cucumber',
-  //         'Zucchini',
-  //         'Mushrooms',
-  //         'Garlic',
-  //         'Corn',
-  //         'Sweet Potatoes',
-  //         'Cabbage'
-  //       ],
-  //       'Dairy': [
-  //         'Milk',
-  //         'Eggs',
-  //         'Cheese',
-  //         'Yogurt',
-  //         'Butter',
-  //         'Cream Cheese',
-  //         'Sour Cream',
-  //         'Heavy Cream',
-  //         'Cottage Cheese',
-  //         'Almond Milk'
-  //       ],
-  //       'Meat': [
-  //         'Chicken Breast',
-  //         'Ground Beef',
-  //         'Bacon',
-  //         'Sausage',
-  //         'Steak',
-  //         'Pork Chops',
-  //         'Ham',
-  //         'Turkey',
-  //         'Chicken Thighs',
-  //         'Ground Turkey'
-  //       ],
-  //       'Bakery': [
-  //         'Bread',
-  //         'Bagels',
-  //         'Tortillas',
-  //         'Pita Bread',
-  //         'Hamburger Buns',
-  //         'Croissants',
-  //         'Muffins',
-  //         'Donuts',
-  //         'Cake',
-  //         'Cookies'
-  //       ],
-  //       'Pantry': [
-  //         'Rice',
-  //         'Pasta',
-  //         'Flour',
-  //         'Sugar',
-  //         'Cereal',
-  //         'Peanut Butter',
-  //         'Jam',
-  //         'Honey',
-  //         'Olive Oil',
-  //         'Vinegar',
-  //         'Ketchup',
-  //         'Mustard',
-  //         'Mayonnaise',
-  //         'Soy Sauce',
-  //         'Hot Sauce',
-  //         'BBQ Sauce',
-  //         'Salad Dressing',
-  //         'Pickles',
-  //         'Salsa',
-  //         'Canned Tomatoes',
-  //         'Beans',
-  //         'Soup',
-  //         'Tuna',
-  //         'Chicken Broth'
-  //       ],
-  //       'Frozen': [
-  //         'Ice Cream',
-  //         'Frozen Pizza',
-  //         'Frozen Vegetables',
-  //         'Frozen Fruits',
-  //         'Frozen Meals',
-  //         'Ice',
-  //         'Frozen Waffles',
-  //         'Frozen Chicken Nuggets',
-  //         'Frozen Fish',
-  //         'Popsicles'
-  //       ],
-  //       'Beverages': [
-  //         'Water',
-  //         'Coffee',
-  //         'Tea',
-  //         'Juice',
-  //         'Soda',
-  //         'Beer',
-  //         'Wine',
-  //         'Sparkling Water',
-  //         'Energy Drinks',
-  //         'Lemonade'
-  //       ],
-  //       'Snacks': [
-  //         'Chips',
-  //         'Pretzels',
-  //         'Popcorn',
-  //         'Nuts',
-  //         'Trail Mix',
-  //         'Granola Bars',
-  //         'Crackers',
-  //         'Chocolate',
-  //         'Candy',
-  //         'Cookies'
-  //       ],
-  //       'Household': [
-  //         'Paper Towels',
-  //         'Toilet Paper',
-  //         'Dish Soap',
-  //         'Laundry Detergent',
-  //         'Trash Bags',
-  //         'Cleaning Supplies',
-  //         'Tissues',
-  //         'Batteries',
-  //         'Light Bulbs',
-  //         'Air Freshener'
-  //       ],
-  //       'Spices': [
-  //         'Salt',
-  //         'Pepper',
-  //         'Garlic Powder',
-  //         'Cinnamon',
-  //         'Paprika',
-  //         'Oregano',
-  //         'Basil',
-  //         'Cumin',
-  //         'Thyme',
-  //         'Rosemary'
-  //       ],
-  //       'Seafood': [
-  //         'Salmon',
-  //         'Tuna',
-  //         'Shrimp',
-  //         'Crab',
-  //         'Tilapia',
-  //         'Cod',
-  //         'Lobster',
-  //         'Mussels',
-  //         'Scallops',
-  //         'Calamari'
-  //       ],
-  //       'Health': [
-  //         'Vitamins',
-  //         'Supplements',
-  //         'Protein Powder',
-  //         'Cough Drops',
-  //         'Band-Aids',
-  //         'Pain Relievers',
-  //         'First Aid Kit',
-  //         'Cold Medicine',
-  //         'Antacids',
-  //         'Allergy Medicine'
-  //       ],
-  //       'Personal': [
-  //         'Shampoo',
-  //         'Conditioner',
-  //         'Soap',
-  //         'Deodorant',
-  //         'Toothpaste',
-  //         'Mouthwash',
-  //         'Floss',
-  //         'Razors',
-  //         'Lotion',
-  //         'Sunscreen'
-  //       ],
-  //       'Other': [
-  //         'Notepad',
-  //         'Pens',
-  //         'Gift Card',
-  //         'Magazine',
-  //         'Newspaper',
-  //         'Greeting Card',
-  //         'Stamps',
-  //         'Phone Charger',
-  //         'Umbrella',
-  //         'Scissors'
-  //       ],
-  //     };
-  //   }
-  // }
 
   // Get custom categories from settings
   List<String> get customCategories {
@@ -3539,7 +3412,16 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   value: languageProvider.currentLanguage,
                   onChanged: (AppLanguage? newLanguage) {
                     if (newLanguage != null) {
+                      // 1) Get the old language
+                      final oldLanguage = languageProvider.currentLanguage;
+
+                      // 2) Change to the new language as usual
                       languageProvider.setLanguage(newLanguage);
+
+                      // 3) Now rename any existing default items from old -> new language
+                      Provider.of<GroceryProvider>(context, listen: false)
+                          .updateDefaultFoodItemsForLanguage(
+                              oldLanguage, newLanguage);
                     }
                   },
                   items: [
@@ -3738,91 +3620,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
         ),
 
         const SizedBox(height: 16),
-        /*
-        // Data Management Section
-        Card(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Text(
-                  'Data Management'.localized(languageProvider),
-                  style: theme.textTheme.titleLarge,
-                ),
-              ),
-              const Divider(height: 1),
-              
-              ListTile(
-                title: Text('Clear All Data'.localized(languageProvider)),
-                subtitle: Text('Delete all grocery and food items'.localized(languageProvider)),
-                trailing: const Icon(Icons.delete_forever, color: Colors.red),
-                onTap: () {
-                  showDialog(
-                    context: context,
-                    builder: (context) => AlertDialog(
-                      title: Text('Clear All Data?'.localized(languageProvider)),
-                      content: Text(
-                        'This will delete all your grocery lists and food items. '
-                        'This action cannot be undone.'.localized(languageProvider),
-                      ),
-                      actions: [
-                        TextButton(
-                          onPressed: () => Navigator.pop(context),
-                          child: Text('Cancel'.localized(languageProvider)),
-                        ),
-                        TextButton(
-                          style: TextButton.styleFrom(
-                            foregroundColor: Colors.red,
-                          ),
-                          onPressed: () {
-                            // Implement data clearing logic
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text('All data cleared'.localized(languageProvider)),
-                              ),
-                            );
-                            Navigator.pop(context);
-                          },
-                          child: Text('Clear All'.localized(languageProvider)),
-                        ),
-                      ],
-                    ),
-                  );
-                },
-              ),
-              
-              ListTile(
-                title: Text('Export Data'.localized(languageProvider)),
-                subtitle: Text('Save your data to a file'.localized(languageProvider)),
-                trailing: const Icon(Icons.download),
-                onTap: () {
-                  // Implement export functionality
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text('Export feature coming soon!'.localized(languageProvider)),
-                    ),
-                  );
-                },
-              ),
-              
-              ListTile(
-                title: Text('Import Data'.localized(languageProvider)),
-                subtitle: Text('Load data from a file'.localized(languageProvider)),
-                trailing: const Icon(Icons.upload),
-                onTap: () {
-                  // Implement import functionality
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text('Import feature coming soon!'.localized(languageProvider)),
-                    ),
-                  );
-                },
-              ),
-            ],
-          ),
-        ),
-        */
       ],
     );
   }
