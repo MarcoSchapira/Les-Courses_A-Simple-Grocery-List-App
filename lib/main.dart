@@ -2114,7 +2114,9 @@ class _GroceryListScreenState extends State<GroceryListScreen> {
 
           // Suggestions list
           if (_suggestions.isNotEmpty)
-            Container(
+          Flexible(
+    fit: FlexFit.loose,
+            child: Container(
               margin: const EdgeInsets.symmetric(horizontal: 16),
               decoration: BoxDecoration(
                 color: theme.cardColor,
@@ -2161,6 +2163,7 @@ class _GroceryListScreenState extends State<GroceryListScreen> {
                 },
               ),
             ),
+          ),
 
           // Grocery list
           Expanded(
