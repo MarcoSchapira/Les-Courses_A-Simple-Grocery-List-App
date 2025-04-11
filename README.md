@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # 🛒 Les Course – Grocery List App
 
 **Les Course** is a Flutter app to manage grocery lists with smart item suggestions, categories, priority sorting, and dark/light themes. It automatically saves your items and customizations.
@@ -9,8 +8,20 @@ This application was developed almost entirely using the **Claude Sonnet 3.7 LLM
 
 ## 📱 App Preview
 
-![App Preview](your-image-link-here)
-
+<p align="center">
+  <img src="assets/screen_shots/Screenshot 2025-04-10 at 12.49.23 PM.png" width="19%">
+  <img src="assets/screen_shots/Screenshot 2025-04-10 at 12.49.37 PM.png" width="19%">
+  <img src="assets/screen_shots/Screenshot 2025-04-10 at 12.50.32 PM.png" width="19%">
+  <img src="assets/screen_shots/Screenshot 2025-04-10 at 12.51.12 PM.png" width="19%">
+  <img src="assets/screen_shots/Screenshot 2025-04-10 at 12.51.34 PM.png" width="19%">
+</p>
+<p align="center">
+  <img src="assets/screen_shots/Screenshot 2025-04-10 at 12.51.54 PM.png" width="19%">
+  <img src="assets/screen_shots/Screenshot 2025-04-10 at 12.52.16 PM.png" width="19%">
+  <img src="assets/screen_shots/Screenshot 2025-04-10 at 12.52.48 PM.png" width="19%">
+  <img src="assets/screen_shots/Screenshot 2025-04-10 at 12.51.54 PM.png" width="19%">
+  <img src="assets/screen_shots/Screenshot 2025-04-10 at 12.52.16 PM.png" width="19%">
+</p>
 
 ---
 
@@ -21,13 +32,9 @@ This application was developed almost entirely using the **Claude Sonnet 3.7 LLM
 - Customize suggestions by adding your own items.
 - Manage your personal food database in a separate tab.
 
-![Smart Item Management](your-image-link-here)
-
 ### ✔️ Clean Check-off Action
 - Tap items to mark them as purchased.
 - Checked items move to the bottom and are crossed out.
-
-![Clean Check-off Action](your-image-link-here)
 
 ### 📌 Prioritized Shopping
 - Star items to automatically move them to the top.
@@ -64,21 +71,3 @@ git clone https://github.com/yourusername/les-course.git
 cd les-course
 flutter pub get
 flutter run
-=======
-# les_course_de_papoum_et_mamoune
-
-A new Flutter project.
-
-## Getting Started
-
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
->>>>>>> 9914320 (Full App)
